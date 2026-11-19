@@ -1,0 +1,93 @@
+/* Deadlink — graveyard theme. Dark, legible, no framework. */
+:root {
+  --bg: #0d0f0e;
+  --panel: #161a17;
+  --bone: #f2ede3;
+  --muted: #a9a294;
+  --ecto: #8affc1;
+  --fog: #6b5b95;
+  --dead: #ff7a6b;
+  --amber: #ffc857;
+  --line: #2a2f2b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--bone);
+  font-family: Georgia, 'Times New Roman', serif; line-height: 1.5;
+}
+.top { text-align: center; padding: 2.5rem 1rem 0.5rem; }
+.wordmark { font-size: 3rem; letter-spacing: .18em; font-weight: 700; }
+.wordmark .link-word { color: var(--ecto); }
+.tagline { color: var(--muted); font-style: italic; margin: .25rem 0 0; }
+main { max-width: 880px; margin: 0 auto; padding: 0 1rem 3rem; }
+h1, h2 { letter-spacing: .02em; }
+.sub { color: var(--muted); }
+.hero { text-align: center; padding: 1.5rem 0 2rem; border-bottom: 1px solid var(--line); }
+.hero h1 { font-size: 2rem; margin: .5rem 0; }
+form { display: flex; gap: .5rem; max-width: 640px; margin: 1rem auto 0; }
+input[type="text"], textarea, select {
+  background: var(--panel); color: var(--bone); border: 1px solid var(--line);
+  border-radius: 8px; padding: .75rem .9rem; font-size: 1rem; width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+button {
+  background: var(--ecto); color: #0d0f0e; border: 0; border-radius: 8px;
+  padding: .75rem 1.1rem; font-size: 1rem; font-weight: 700; cursor: pointer;
+  white-space: nowrap;
+}
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.secondary { background: var(--panel); color: var(--bone); border: 1px solid var(--line); }
+.error { color: var(--dead); }
+.verdict {
+  max-width: 640px; margin: 1.25rem auto 0; text-align: left;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+.verdict .v-word { font-size: 2.2rem; font-weight: 800; letter-spacing: .06em; margin: 0; }
+.verdict .v-word.alive { color: var(--ecto); }
+.verdict .v-word.dead { color: var(--dead); }
+.verdict .v-word.unknown { color: var(--amber); }
+.verdict .v-url { font-family: ui-monospace, monospace; word-break: break-all; color: var(--muted); }
+.verdict .v-meta { margin: .6rem 0; }
+.verdict a.resurrect {
+  display: inline-block; margin-top: .5rem; background: var(--ecto); color: #0d0f0e;
+  font-weight: 700; text-decoration: none; padding: .6rem 1rem; border-radius: 8px;
+}
+.verdict .note { color: var(--muted); font-size: .95rem; }
+.bulk { padding: 2rem 0; border-bottom: 1px solid var(--line); }
+.bulk-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; align-items: center; }
+.drop {
+  border: 1px dashed var(--fog); border-radius: 8px; padding: .7rem .9rem;
+  color: var(--muted); cursor: pointer; font-size: .95rem;
+}
+.drop.drag { border-color: var(--ecto); color: var(--ecto); }
+.progress { margin-top: 1rem; background: var(--panel); border-radius: 8px; padding: .6rem .9rem; }
+.progress #bulk-bar { height: 8px; background: var(--ecto); border-radius: 4px; width: 0%; transition: width .2s; }
+.summary { font-weight: 700; margin-top: 1rem; }
+.results table { width: 100%; border-collapse: collapse; margin-top: .75rem; font-size: .95rem; }
+.results th, .results td { text-align: left; padding: .5rem .4rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.results td.url { font-family: ui-monospace, monospace; word-break: break-all; }
+.pill { display: inline-block; padding: .1rem .55rem; border-radius: 999px; font-size: .85rem; font-weight: 700; }
+.pill.alive { background: #123524; color: var(--ecto); }
+.pill.dead { background: #3a1712; color: var(--dead); }
+.pill.unknown { background: #3a2f10; color: var(--amber); }
+.cemetery { padding: 2rem 0; }
+.cemetery-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; }
+.cemetery-head select { width: auto; }
+#cemetery-clear { background: var(--panel); color: var(--bone); border: 1px solid var(--line); }
+.tomb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: .75rem; margin-top: 1rem; }
+.tomb {
+  background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--fog);
+  border-radius: 10px 10px 8px 8px; padding: .9rem 1rem;
+}
+.tomb.dead { border-top-color: var(--dead); }
+.tomb.alive { border-top-color: var(--ecto); }
+.tomb .t-url { font-family: ui-monospace, monospace; font-size: .85rem; word-break: break-all; color: var(--bone); }
+.tomb .t-epitaph { font-style: italic; color: var(--muted); margin: .4rem 0; }
+.tomb a { color: var(--ecto); }
+footer { text-align: center; color: var(--muted); font-size: .9rem; padding: 1rem; border-top: 1px solid var(--line); }
+@media (max-width: 720px) {
+  .wordmark { font-size: 2.2rem; }
+  form { flex-direction: column; }
+  button { width: 100%; }
+}

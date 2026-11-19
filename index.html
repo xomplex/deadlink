@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadlink — Resurrect the Dead Web</title>
+<meta name="description" content="Deadlink finds dead links and brings them back via the Internet Archive. Free, no account, no server.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wordmark">DEAD<span class="link-word">LINK</span></div>
+  <p class="tagline">The web forgets. We remember.</p>
+</header>
+
+<main>
+  <section class="hero" aria-label="Check one link">
+    <h1>Is this link dead?</h1>
+    <p class="sub">Paste any URL. Deadlink checks whether it still answers — and if it doesn't, digs up its archived copy from the Wayback Machine.</p>
+    <form id="single-form" autocomplete="off">
+      <input id="single-url" type="text" inputmode="url" placeholder="https://example.com/old-article" aria-label="URL to check" spellcheck="false">
+      <button type="submit">Check the dead</button>
+    </form>
+    <p id="single-error" class="error" role="alert" hidden></p>
+    <div id="verdict" class="verdict" hidden></div>
+  </section>
+
+  <section class="bulk" aria-label="Check many links">
+    <h2>Bulk link-rot report</h2>
+    <p class="sub">Paste a list of URLs (one per line), or drop a browser bookmarks export (.html). Deadlink checks each one and builds a report.</p>
+    <textarea id="bulk-input" rows="6" placeholder="https://old-blog.com/post-1&#10;https://example.org/dead-page&#10;…" aria-label="List of URLs"></textarea>
+    <div class="bulk-actions">
+      <button id="bulk-run" type="button">Check all links</button>
+      <label class="drop" for="bulk-file">Drop bookmarks .html here or click to choose a file
+        <input id="bulk-file" type="file" accept=".html,.htm,text/html" hidden>
+      </label>
+      <button id="bulk-copy" type="button" disabled>Copy Markdown report</button>
+    </div>
+    <div id="bulk-progress" class="progress" hidden><div id="bulk-bar"></div><span id="bulk-label"></span></div>
+    <p id="bulk-summary" class="summary" hidden></p>
+    <div id="bulk-results" class="results"></div>
+  </section>
+
+  <section class="cemetery" aria-label="The Cemetery">
+    <div class="cemetery-head">
+      <h2>The Cemetery</h2>
+      <div>
+        <label>Show
+          <select id="cemetery-filter">
+            <option value="all">all tombstones</option>
+            <option value="dead">dead only</option>
+            <option value="alive">alive only</option>
+          </select>
+        </label>
+        <button id="cemetery-clear" type="button">Clear the Cemetery</button>
+      </div>
+    </div>
+    <p class="sub">Every link you check gets a tombstone — stored only in your browser, never sent anywhere.</p>
+    <div id="cemetery-grid" class="tomb-grid"></div>
+    <p id="cemetery-empty" class="sub">No tombstones yet. Check a link above and it will rest here.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Deadlink — built with Kiro for Kiroween 2026. Archive data: Internet Archive Wayback Machine. No accounts, no tracking, no server.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

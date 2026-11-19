@@ -1,0 +1,3 @@
+node_modules/
+.DS_Store
+# NOTE: .kiro/ is intentionally NOT ignored — Kiroween rules require it at the repo root.
