@@ -15,9 +15,10 @@ async function checkOne(url) {
   let snapshot = { available: false, url: null, timestamp: null, status: null };
   let history = { count: 0, first: null, last: null };
   let archiveError = null;
+  let historyError = null;
   if (verdict === 'dead') {
     try { snapshot = await getClosestSnapshot(url); } catch (e) { archiveError = e; }
-    try { history = await getSnapshotHistory(url); } catch { /* non-blocking */ }
+    try { history = await getSnapshotHistory(url); } catch (e) { historyError = e; }
   }
   const row = {
     url,
@@ -27,6 +28,7 @@ async function checkOne(url) {
     snapshotCount: history.count,
     firstSeen: history.first ? formatDate(waybackTimestampToDate(history.first)) : null,
     archiveError: archiveError ? String(archiveError.message || archiveError) : null,
+    historyError: historyError ? String(historyError.message || historyError) : null,
   };
   saveTombstone({ url, verdict: row.verdict, lastSeen: row.lastSeen, snapshotUrl: row.snapshotUrl });
   return row;
@@ -51,7 +53,8 @@ function renderVerdict(row) {
     <p class="v-meta">${esc(epitaph)}</p>
     ${row.snapshotCount ? `<p class="v-meta">Snapshots: ${row.snapshotCount} — first seen ${esc(row.firstSeen || 'unknown')}, last seen ${esc(row.lastSeen || 'unknown')}.</p>` : ''}
     ${row.snapshotUrl ? `<a class="resurrect" href="${esc(row.snapshotUrl)}" target="_blank" rel="noopener">↺ Resurrect — open archived copy</a>` : ''}
-    ${row.archiveError ? `<p class="note">Archive note: ${esc(row.archiveError)}</p>` : ''}`;
+    ${row.archiveError ? `<p class="note">Archive note: ${esc(row.archiveError)}</p>` : ''}
+    ${row.historyError ? `<p class="note">Snapshot history unavailable: ${esc(row.historyError)}</p>` : ''}`;
   el.hidden = false;
 }
 

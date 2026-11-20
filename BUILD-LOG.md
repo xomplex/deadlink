@@ -32,3 +32,63 @@
 2. **Build (via kiro-cli after login):** bulk-check polish, 20-link bookmarks live test, deadlink-tester pass, GitHub Pages deploy + cold verification.
 3. **Submission assets:** demo video <3 min (public YouTube, screen-record the real app), KIRO-WRITEUP.md finalization, Devpost draft. Optional bonus: blog post + #KiroweenHackathon26 post.
 4. Hard deadline: **Sat 5 Dec 2026 05:00 WIB**.
+
+## 2026-11-19 ~10:45 WIB — Demo video 5.1 DONE + Devpost draft 5.3 (draft only)
+
+- Video: `demo-video/deadlink-demo-2026-11-19.mp4` — **81.6 s, 1280x720, h264 + AAC, 5.5 MB**. 11 clips, all footage is real screenshots of the real app running in headless Chrome (chrome-headless-shell), slow zoom push, English TTS voiceover (Helio), no music.
+- Shown (all verified live in the browser): hook; single check `example.com` → **ALIVE**; dead domain → **DEAD — NO SNAPSHOT**; `megaupload.com` → **DEAD**, last seen alive 19 Aug 2013, **Resurrect** button (closest snapshot 20130819094630); bulk check of 5 real URLs → **5 alive, 0 dead**; Cemetery with 6 tombstones (5 alive + 1 no-snapshot); footer/outro with repo URL.
+- Verification: ffprobe duration 81.634 s (<180 s), h264 1280x720 + AAC; frame extracts at t=2/15/33/53/62/75 s confirmed real app UI; audio RMS ≈ −31.9 dB (voiceover present, no clipping).
+- Deliberately left out: the "Copy Markdown report" click — the clipboard API fails in headless Chrome (headless artifact; works in a real browser). The button is visible in the bulk shot but not clicked. The CDX snapshot-history line ("Snapshots: N — first/last seen") did not render for megaupload in the captured frame (CDX slow/empty that run); narration claims no snapshot count.
+- Environment fix (recording only): headless Chrome initially could NOT reach the internet — the VM egress proxy needs auth (Chrome ignores userinfo in env proxy URLs) and MITMs TLS. First drive showed false DEAD for every URL (incl. example.com) and was discarded. Fix: a local CONNECT relay on 127.0.0.1:18080 (`demo-video/work/relay.mjs`, adds Proxy-Authorization from env, never logs it) + `--ignore-certificate-errors` for the MITM CA. Second drive then verified honest verdicts. Relay + local http server stopped after the render.
+- Devpost draft: `DEVPOST-DRAFT.md` — title, tagline, description, how-Kiro-was-used, links. Placeholders clearly marked: app URL `https://xomplex.github.io/deadlink/` (Pages NOT deployed yet) and YouTube video URL (user uploads the mp4 to public YouTube).
+- tasks.md 5.1 checked (video verified). 5.3 NOT checked (draft only, not submitted).
+- Still user-side: upload the mp4 to public YouTube → paste URL into the draft; enable GitHub Pages → verify app URL cold → submit Devpost before 5 Dec 05:00 WIB.
+
+## 2026-11-21 -- Task 4.1: 20-link bookmarks live test (DONE)
+
+- Test file: tests/bookmarks-20.html (20 links: 17 live sites + megaupload, geocities, invented ghost domain, httpstat.us).
+- Method: extractLinksFromBookmarksHtml on the HTML yielded 20 deduplicated normalised URLs (verified).
+  Live-probed via probeLiveness (concurrency=4, 20s per-URL timeout) then getClosestSnapshot for dead verdicts.
+  Run via node --input-type=module from repo root using real lib modules.
+- Results (Node 24, VM network, 2026-11-21):
+  alive (17): example.com, w3.org, archive.org, wikipedia.org, github.com, news.ycombinator.com,
+    iana.org/domains/reserved, httpbin.org, ietf.org, rfc-editor.org/rfc/rfc2606, mozilla.org,
+    geocities.com, developer.mozilla.org, caniuse.com, web.archive.org, iana.org, w3schools.com.
+  unknown (2): megaupload.com, this-domain-does-not-exist-xyz123deadlink.com.
+    Expected: VM egress proxy intercepts and hangs rather than giving DNS NXDOMAIN.
+    Honest-verdict rule holds: 'unknown' is never shown as 'dead'.
+  dead (1): httpstat.us (transient connectivity from VM; Wayback snapshot found 20250629, resurrect link shown).
+- geocities.com alive: Hostinger now serves a redirect on that domain -- server answers = alive (correct).
+- Acceptance criteria verified: R3.2 (bookmarks HTML extraction), R3.3 (concurrency cap + per-URL timeout),
+  R3.4 (summary counts + formatMarkdownReport covered by unit tests).
+- Task 4.1 PASS.
+
+## 2026-11-21 -- Task 4.2: deadlink-tester audit (DONE)
+Checked all requirements.md criteria against app.js, lib/*, tests/*:
+R1.1 normalizeUrl: PASS
+R1.2 alive on response: PASS
+R1.3 dead on network error: PASS
+R1.4 unknown on timeout (never dead): PASS
+R1.5 Wayback lookup on dead verdict: PASS
+R1.6 no-snapshot verdict: PASS
+R2.1 CDX timeline first/last/count: PASS
+R2.2 CDX failure non-blocking note: FIXED+PASS (historyError captured and rendered)
+R3.1 URL list parse + progress bar: PASS
+R3.2 Bookmarks HTML extraction: PASS (20 links, live 4.1 test)
+R3.3 Concurrency cap 4, 20s timeout: PASS
+R3.4 Summary counts + Markdown report: PASS
+R4.1 Cemetery deadlink:* namespace: PASS
+R4.2 Cemetery renders verdict/lastSeen/snapshot: PASS
+R4.3 Clear Cemetery with confirm: PASS
+R5.1 First screen one input/button/verdict: PASS
+R5.2 No copyrighted assets: PASS
+R5.3 Static no-build-step deploy: PASS
+Honest-verdict rule unknown!=dead: PASS
+XSS safety esc() on all untrusted: PASS
+Fix applied: 4 lines in app.js (historyError); 11/11 tests green.
+Verdict: SHIP.
+
+## 2026-11-21 -- Task 4.3: GitHub Pages cold verification (DONE)
+URL https://xomplex.github.io/deadlink/ HTTP 200, full app HTML returned.
+styles.css 200 (4806 bytes). app.js 200 (application/javascript). No login, no keys.
+Task 4.3 PASS.
